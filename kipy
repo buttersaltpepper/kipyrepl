@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Start a new Kitty tab with listener
+kitty @ launch --type=tab --title "repl listen" --dont-take-focus --env MPLBACKEND="module://matplotlib-backend-kitty" kitty --listen-on unix:@mykitty 
+
+# Start Python in the new tab
+kitty @ --to unix:@mykitty send-text "python3\n"
+
+# close  the tab
+kitty @ close-tab
+
+
+
+
