@@ -1,14 +1,19 @@
 #!/bin/bash
 
-# Start a new Kitty tab with listener
-kitty @ launch --type=tab --title "repl listen" --dont-take-focus --env MPLBACKEND="module://matplotlib-backend-kitty" kitty --listen-on unix:@mykitty 
+# Define the socket name
+SOCKET_NAME="unix:@mykitty"
+
+# Start a new Kitty tab with the listener
+kitty @ launch --type=tab --title "repl listen" --dont-take-focus --env MPLBACKEND="module://matplotlib-backend-kitty" kitty --listen-on $SOCKET_NAME
+
+# Wait until the socket is available
+until kitty @ --to $SOCKET_NAME ls > /dev/null 2>&1; do
+    echo "Waiting for Kitty tab to be ready..."
+    sleep 1
+done
 
 # Start Python in the new tab
-kitty @ --to unix:@mykitty send-text "python3\n"
+kitty @ --to $SOCKET_NAME send-text "python3\n"
 
-# close  the tab
-kitty @ close-tab
-
-
-
-
+# To close the tab (uncomment if needed)
+# kitty @ close-tab --match title:repl\ listen
